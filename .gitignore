@@ -47,7 +47,7 @@
 *.mod*
 *.cmd
 *.sh
-*.gz
+bochs-2.6.8.tar.gz
 .tmp_versions/
 modules.order
 Module.symvers
