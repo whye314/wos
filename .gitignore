@@ -47,6 +47,7 @@
 *.mod*
 *.cmd
 *.sh
+*.gz
 .tmp_versions/
 modules.order
 Module.symvers
