@@ -4,6 +4,7 @@
 #include "interrupt.h"
 #include "memory.h"
 #include "thread.h"
+#include "console.h"
 
 void print(void *a);
 
@@ -22,15 +23,15 @@ int main(void){
     put_str("thread 2 start.\n");
 
 
-    while(1);
+    while(1) console_put_str("m");
     return 0;
 }
 
 void print(void * a){
     
     while(1){
-        int_disable();
-        put_str(a);
-        int_enable();
+        
+        console_put_str(a);
+       
     }
 }

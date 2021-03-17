@@ -19,38 +19,38 @@
 00000000000i[      ]   SB16 support: no
 00000000000i[      ]   USB support: no
 00000000000i[      ]   VGA extension support: vbe voodoo
-00000000000i[MEM0  ] allocated memory at 0x7f955589a010. after alignment, vector=0x7f955589b000
+00000000000i[MEM0  ] allocated memory at 0x7f3efc536010. after alignment, vector=0x7f3efc537000
 00000000000i[MEM0  ] 32.00MB
 00000000000i[MEM0  ] mem block size = 0x00100000, blocks=32
-00000000000i[MEM0  ] rom at 0xfffe0000/131072 ('/home/whye/Documents/os/bochs-2.6.8/bios/BIOS-bochs-latest')
+00000000000i[MEM0  ] rom at 0xfffe0000/131072 ('/home/whye/Documents/wos/bochs-2.6.8/bios/BIOS-bochs-latest')
 00000000000i[CPU0  ] loaded MSR[0x02c] type=0 00000000:00000000 00000000:00000000 00000000:00000000
-00000000000i[      ] lt_dlhandle is 0x560987649640
+00000000000i[      ] lt_dlhandle is 0x557fba180640
 00000000000i[PLUGIN] loaded plugin libbx_hdimage.so
-00000000000i[      ] lt_dlhandle is 0x560987649f30
+00000000000i[      ] lt_dlhandle is 0x557fba180f30
 00000000000i[PLUGIN] loaded plugin libbx_pci.so
-00000000000i[      ] lt_dlhandle is 0x56098764a9c0
+00000000000i[      ] lt_dlhandle is 0x557fba1819c0
 00000000000i[PLUGIN] loaded plugin libbx_pci2isa.so
-00000000000i[      ] lt_dlhandle is 0x56098764b3c0
+00000000000i[      ] lt_dlhandle is 0x557fba1823c0
 00000000000i[PLUGIN] loaded plugin libbx_acpi.so
-00000000000i[      ] lt_dlhandle is 0x56098764be90
+00000000000i[      ] lt_dlhandle is 0x557fba182e90
 00000000000i[PLUGIN] loaded plugin libbx_cmos.so
-00000000000i[      ] lt_dlhandle is 0x56098764c820
+00000000000i[      ] lt_dlhandle is 0x557fba183820
 00000000000i[PLUGIN] loaded plugin libbx_dma.so
-00000000000i[      ] lt_dlhandle is 0x56098764d310
+00000000000i[      ] lt_dlhandle is 0x557fba184310
 00000000000i[PLUGIN] loaded plugin libbx_pic.so
-00000000000i[      ] lt_dlhandle is 0x56098764dc10
+00000000000i[      ] lt_dlhandle is 0x557fba184c10
 00000000000i[PLUGIN] loaded plugin libbx_pit.so
-00000000000i[      ] lt_dlhandle is 0x56098764e6b0
+00000000000i[      ] lt_dlhandle is 0x557fba1856b0
 00000000000i[PLUGIN] loaded plugin libbx_vga.so
-00000000000i[      ] lt_dlhandle is 0x56098764ef70
+00000000000i[      ] lt_dlhandle is 0x557fba185f70
 00000000000i[PLUGIN] loaded plugin libbx_floppy.so
-00000000000i[      ] lt_dlhandle is 0x56098764fb50
+00000000000i[      ] lt_dlhandle is 0x557fba186b50
 00000000000i[PLUGIN] loaded plugin libbx_ioapic.so
-00000000000i[      ] lt_dlhandle is 0x560987650510
+00000000000i[      ] lt_dlhandle is 0x557fba187510
 00000000000i[PLUGIN] loaded plugin libbx_keyboard.so
-00000000000i[      ] lt_dlhandle is 0x5609876510f0
+00000000000i[      ] lt_dlhandle is 0x557fba1880f0
 00000000000i[PLUGIN] loaded plugin libbx_harddrv.so
-00000000000i[      ] lt_dlhandle is 0x5609876632b0
+00000000000i[      ] lt_dlhandle is 0x557fba19a2b0
 00000000000i[PLUGIN] loaded plugin libbx_pci_ide.so
 00000000000i[PLUGIN] init_dev of 'pci' plugin device by virtual method
 00000000000i[DEV   ] i440FX PMC present at device 0, function 0
@@ -58,7 +58,7 @@
 00000000000i[DEV   ] PIIX3 PCI-to-ISA bridge present at device 1, function 0
 00000000000i[PLUGIN] init_dev of 'cmos' plugin device by virtual method
 00000000000i[CMOS  ] Using local time for initial clock
-00000000000i[CMOS  ] Setting initial clock to: Tue Mar 16 08:51:11 2021 (time0=1615909871)
+00000000000i[CMOS  ] Setting initial clock to: Wed Mar 17 09:25:30 2021 (time0=1615998330)
 00000000000i[PLUGIN] init_dev of 'dma' plugin device by virtual method
 00000000000i[DMA   ] channel 4 used by cascade
 00000000000i[PLUGIN] init_dev of 'pic' plugin device by virtual method
@@ -70,7 +70,7 @@
 00000000000i[BXVGA ] VBE Bochs Display Extension Enabled
 00000000000i[XGUI  ] test_alloc_colors: 16 colors available out of 16 colors tried
 00000000000i[XGUI  ] font 8 wide x 16 high, display depth = 24
-00000000000i[MEM0  ] rom at 0xc0000/41472 ('/home/whye/Documents/os/bochs-2.6.8/bios/VGABIOS-lgpl-latest')
+00000000000i[MEM0  ] rom at 0xc0000/41472 ('/home/whye/Documents/wos/bochs-2.6.8/bios/VGABIOS-lgpl-latest')
 00000000000i[PLUGIN] init_dev of 'floppy' plugin device by virtual method
 00000000000i[DMA   ] channel 2 used by Floppy Drive
 00000000000i[PLUGIN] init_dev of 'acpi' plugin device by virtual method
@@ -226,5 +226,6 @@
 00002067582i[VBIOS ] VBE Bios $Id: vbe.c,v 1.65 2014/07/08 18:02:25 vruppert Exp $
 00002412036i[BIOS  ] ata0-0: PCHS=121/16/63 translation=none LCHS=121/16/63
 00006288874i[BIOS  ] IDE time out
-00007529600i[XGUI  ] charmap update. Font Height is 16
+00007630900i[XGUI  ] charmap update. Font Height is 16
 00156815880i[BIOS  ] Booting from 0000:7c00
+00303660621i[      ] Ctrl-C detected in signal handler.

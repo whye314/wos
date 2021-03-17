@@ -35,6 +35,9 @@ static void init_thread(struct task_struct * pthread, char * name, uint8_t prio)
     memset(pthread, 0, sizeof(*pthread));
     strcpy(pthread->name, name);
     pthread->priority = prio;
+    pthread->tricks = prio;
+    pthread->elapsed_ticks = 0;
+    pthread->page = NULL;
     pthread->stack_magic = STACK_MAGIC;
     if(pthread == main_thread)
     {
@@ -86,7 +89,7 @@ void schedule(){
 
     struct task_struct * next = get_address_from_member(struct task_struct, general_tag, list_pop(&thread_ready_list));
     next->status = TASK_RUNNING;
-    put_str("\nschedule.\n");
+    //put_str("\nschedule.\n");
     switch_to(current_task, next);
 
 
@@ -98,5 +101,26 @@ void thread_init(void){
     list_init(&thread_ready_list);
     main_thread_start();
     put_str("thread initization finish.\n");
+}
+
+void thread_block(enum task_status stat){
+    ASSERT((stat == TASK_BLOCKED) || (stat == TASK_WAITING) || (stat == TASK_HANGING));
+    enum int_status old_status = int_disable();
+    struct task_struct * current = current_thread();
+    current->status = stat;
+    schedule();
+    int_set_status(old_status);
+}
+
+void thread_unlock(struct task_struct * pthread){
+    enum task_status stat = pthread->status;
+    ASSERT((stat == TASK_BLOCKED) || (stat == TASK_WAITING) || (stat == TASK_HANGING));
+    enum int_status old_status = int_disable();
+    if(stat != TASK_READY){
+        ASSERT(!list_find(&thread_ready_list, &pthread->general_tag));
+        list_push(&thread_ready_list, &pthread->general_tag);
+        pthread->status = TASK_READY;
+    }
+    int_set_status(old_status);
 }
 

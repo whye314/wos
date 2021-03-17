@@ -77,6 +77,8 @@ struct task_struct{
 
 struct task_struct * thread_start(char * name, uint8_t prio, void function(void *), void * args);
 struct task_struct * current_thread();
+void thread_block(enum task_status stat);
+void thread_unlock(struct task_struct * pthread);
 void thread_init(void);
 void schedule();
 #endif
