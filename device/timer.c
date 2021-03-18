@@ -10,7 +10,7 @@
 #define COUNTER0_MODE (2 << 1)
 #define READ_WATCH_LATCH  (3 << 4)
 #define PIT_COUNTER_PORT 0x43
-#define FREQUENCY0_VALUE 100
+#define FREQUENCY0_VALUE 1
 #define INPUT_FREQUENCY0_VALUE 1193180
 
 static void int_timer_handler();

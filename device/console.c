@@ -12,24 +12,24 @@ void console_acquire(){
     lock_acquire(&console_lock);
 }
 
-void console_reseale(){
-    lock_reseale(&console_lock);
+void console_release(){
+    lock_release(&console_lock);
 }
 
 void console_put_str(char * str){
     console_acquire();
     put_str(str);
-    console_reseale();
+    console_release();
 }
 
 void console_put_int(uint32_t n){
     console_acquire();
     put_int(n);
-    console_reseale();
+    console_release();
 }
 
 void console_put_char(uint8_t n){
     console_acquire();
     put_char(n);
-    console_reseale();
+    console_release();
 }

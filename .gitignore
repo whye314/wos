@@ -53,6 +53,7 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+bochs-2.6.8
 
 
 test*

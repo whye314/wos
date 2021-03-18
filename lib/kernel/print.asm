@@ -16,6 +16,10 @@ put_char:
     mov ax, SELECTOR_VIDEO
     mov gs, ax
 
+    pushf
+    cli
+
+
     ;get cursor high byte
     mov dx, 0x3d4
     mov al, 0x0e
@@ -89,6 +93,7 @@ put_char:
         mov ebx, 1920
 
     .set_cursor:
+
         mov dx, 0x3d4
         mov al, 0xe
         out dx, al
@@ -103,7 +108,11 @@ put_char:
         mov al, bl
         out dx, al
 
-    
+        
+
+
+
+    popf
     popad
     mov esp, ebp
     pop ebp

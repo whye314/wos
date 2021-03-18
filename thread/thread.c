@@ -66,7 +66,7 @@ struct task_struct * thread_start(char * name, uint8_t prio, void function(void 
 
 static void main_thread_start(){
     main_thread = current_thread();
-    init_thread(main_thread, "main", 31);
+    init_thread(main_thread, "main", 5);
     ASSERT(!list_find(&thread_all_list, &main_thread->all_list_tag));
     list_append(&thread_all_list, &main_thread->all_list_tag);
 }
@@ -85,8 +85,10 @@ void schedule(){
         current_task->tricks = current_task->priority;
         current_task->status = TASK_READY;
     }else{}
+    //put_str("ready list length: ");
+    //put_int(list_len(&thread_ready_list));
+    //put_str("\n");
     ASSERT(!list_isempty(&thread_ready_list));
-
     struct task_struct * next = get_address_from_member(struct task_struct, general_tag, list_pop(&thread_ready_list));
     next->status = TASK_RUNNING;
     //put_str("\nschedule.\n");

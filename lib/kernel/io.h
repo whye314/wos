@@ -11,7 +11,7 @@ static inline void outsw(uint16_t port, const void* addr, uint32_t size){
 }
 static inline uint8_t inb(uint16_t port){
     uint8_t data;
-    asm volatile("in %wl, %b0":"=a"(data):"Nd"(port));
+    asm volatile("in %w1, %b0":"=a"(data):"Nd"(port));
     return data;
 
 }
