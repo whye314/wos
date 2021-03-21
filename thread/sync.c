@@ -19,6 +19,7 @@ void sema_down(struct semaphore * psema){
     while(psema->value == 0){
         ASSERT(!list_find(&psema->waiters, &current_thread()->general_tag));
         list_append(&psema->waiters, &current_thread()->general_tag);
+        //put_str("sema down. ");put_str(current_thread()->name);put_str("\n");
         thread_block(TASK_BLOCKED);
     }
     psema->value --;
@@ -30,6 +31,7 @@ void sema_up(struct semaphore * psema){
     ASSERT(psema->value == 0);
     if(!list_isempty(&psema->waiters)){
         struct task_struct * thread_block = get_address_from_member(struct task_struct, general_tag, list_pop(&psema->waiters));
+        //put_str("sema_up\n");
         thread_unlock(thread_block);
     }
     psema->value++;

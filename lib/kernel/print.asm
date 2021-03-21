@@ -16,7 +16,7 @@ put_char:
     mov ax, SELECTOR_VIDEO
     mov gs, ax
 
-    pushf
+    pushfd
     cli
 
 
@@ -112,7 +112,7 @@ put_char:
 
 
 
-    popf
+    popfd
     popad
     mov esp, ebp
     pop ebp

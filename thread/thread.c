@@ -88,10 +88,10 @@ void schedule(){
     //put_str("ready list length: ");
     //put_int(list_len(&thread_ready_list));
     //put_str("\n");
+    //put_str("\ntime schedule.\n");
     ASSERT(!list_isempty(&thread_ready_list));
     struct task_struct * next = get_address_from_member(struct task_struct, general_tag, list_pop(&thread_ready_list));
     next->status = TASK_RUNNING;
-    //put_str("\nschedule.\n");
     switch_to(current_task, next);
 
 
@@ -110,6 +110,7 @@ void thread_block(enum task_status stat){
     enum int_status old_status = int_disable();
     struct task_struct * current = current_thread();
     current->status = stat;
+    // put_str("block schedule.\n");
     schedule();
     int_set_status(old_status);
 }
