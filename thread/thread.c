@@ -4,6 +4,7 @@
 #include "interrupt.h"
 #include "debug.h"
 #include "print.h"
+#include "process.h"
 
 
 extern void switch_to(struct task_struct * current, struct task_struct * next);
@@ -21,7 +22,7 @@ static void kernel_thread(void * func(void*), void * args){
     func(args);
 }
 
-static void thread_stack(struct task_struct * pthread, void function(void *), void * args){
+void thread_create(struct task_struct * pthread, void function(void *), void * args){
     pthread->self_kstack -= sizeof(struct int_stack);
     pthread->self_kstack -= sizeof(struct thread_stack);
     struct thread_stack * kstack = (struct thread_stack *)pthread->self_kstack;
@@ -31,7 +32,7 @@ static void thread_stack(struct task_struct * pthread, void function(void *), vo
     kstack->ebp = 0; kstack->ebx = 0; kstack->edi = 0; kstack->esi = 0;
 }
 
-static void init_thread(struct task_struct * pthread, char * name, uint8_t prio){
+void init_thread(struct task_struct * pthread, char * name, uint8_t prio){
     memset(pthread, 0, sizeof(*pthread));
     strcpy(pthread->name, name);
     pthread->priority = prio;
@@ -52,7 +53,7 @@ static void init_thread(struct task_struct * pthread, char * name, uint8_t prio)
 struct task_struct * thread_start(char * name, uint8_t prio, void function(void *), void * args){
     struct task_struct * thread = get_kernel_page(1);
     init_thread(thread, name, prio);
-    thread_stack(thread, function, args);
+    thread_create(thread, function, args);
     ASSERT(!list_find(&thread_all_list, &thread->all_list_tag));
     list_append(&thread_all_list, &thread->all_list_tag);
     ASSERT(!list_find(&thread_ready_list, &thread->general_tag));
@@ -92,6 +93,7 @@ void schedule(){
     ASSERT(!list_isempty(&thread_ready_list));
     struct task_struct * next = get_address_from_member(struct task_struct, general_tag, list_pop(&thread_ready_list));
     next->status = TASK_RUNNING;
+    process_activate(next);
     switch_to(current_task, next);
 
 

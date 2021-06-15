@@ -1,5 +1,6 @@
 #ifndef __THREAD_THREAD_H
 #define __THREAD_THREAD_H
+#include "memory.h"
 #include "stdint.h"
 #include "list.h"
 
@@ -36,6 +37,7 @@ struct int_stack{
     uint32_t err_code;
     uint32_t eip;
     uint32_t cs;
+    uint32_t eflags;
     uint32_t esp;
     uint32_t ss;
 
@@ -69,6 +71,7 @@ struct task_struct{
     struct list_elem all_list_tag;
 
     uint32_t * page;
+    struct virtual_addr user_vaddress;
 
     uint32_t stack_magic;
 };
@@ -76,9 +79,12 @@ struct task_struct{
 
 
 struct task_struct * thread_start(char * name, uint8_t prio, void function(void *), void * args);
+void thread_create(struct task_struct * pthread, void function(void *), void * args);
 struct task_struct * current_thread();
 void thread_block(enum task_status stat);
 void thread_unlock(struct task_struct * pthread);
 void thread_init(void);
 void schedule();
+void init_thread(struct task_struct * pthread, char * name, uint8_t prio);
+
 #endif

@@ -2,17 +2,14 @@
 #define __KERNEL_MEMORY_H
 #include "bitmap.h"
 #include "stdint.h"
+// #include "sync.h"
 
 struct virtual_addr{
     struct bitmap vaddr_bitmap;
     uint32_t vaddr_start;
 };
 
-struct mem_pool{
-    struct bitmap mem_pool_bitmap;
-    uint32_t mem_pool_start;
-    uint32_t pool_size;
-};
+
 
 enum pool_flags{
     PF_KERNEL = 1,
@@ -28,6 +25,9 @@ enum pool_flags{
 
 void mem_init();
 void * get_kernel_page(uint32_t n);
+void * get_user_page(uint32_t n);
+uint32_t addr_v2p(uint32_t vaddr);
+void * get_a_page(enum pool_flags pf, uint32_t vaddr);
 
 
 #endif

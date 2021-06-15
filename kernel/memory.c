@@ -4,6 +4,7 @@
 #include "bitmap.h"
 #include "string.h"
 #include "debug.h"
+#include "sync.h"
 
 #define PG_SIZE 4096
 #define MEM_BITMAP_BASE 0xc009a000
@@ -12,9 +13,19 @@
 #define GET_PTE(address) (0xffc00000 + (address >> 12)*4)
 #define GET_PDE(address) (0xfffff000 + (address >> 22)*4)
 
+struct mem_pool{
+    struct bitmap mem_pool_bitmap;
+    uint32_t mem_pool_start;
+    uint32_t pool_size;
+    struct lock lock;
+};
+
+
 
 struct virtual_addr kernel_vaddr;
 struct mem_pool kernel_pool, user_pool;
+
+
 
 
 void mem_pool_init(uint32_t all_pool_size){
@@ -37,6 +48,9 @@ void mem_pool_init(uint32_t all_pool_size){
     user_pool.mem_pool_start = used_mem + (kernel_pool_size * PG_SIZE);
     user_pool.mem_pool_bitmap.map_bytes_len = ubm_length;
     user_pool.mem_pool_bitmap.bits = (uint8_t *)(MEM_BITMAP_BASE + kbm_length);
+
+    lock_init(&kernel_pool.lock);
+    lock_init(&user_pool.lock);
 
     put_str("kernel memory pool start address: ");
     put_int(kernel_pool.mem_pool_start);
@@ -84,6 +98,14 @@ static void * get_vaddr(enum pool_flags pf, uint32_t n){
     }
     else{
         //user_virtual_address
+        struct task_struct * current = current_thread();
+        start_addr = bitmap_scan(&current->user_vaddress.vaddr_bitmap, n);
+        if(start_addr == -1) return NULL;
+        while(n-->0){
+            bitmap_set(&current->user_vaddress.vaddr_bitmap, start_addr+n, 1);
+        }
+        ASSERT((uint32_t)start_addr < 0xc0000000 - PG_SIZE);
+        return (void *)(current->user_vaddress.vaddr_start + start_addr * PG_SIZE);
     }
 }
 
@@ -101,9 +123,12 @@ void * set_page_table(void * virtual_address, void * phy_address){
         *pte = phy_address + PG_P_1 + PG_RW_W + PG_US_U;
     }else{
         uint32_t * new_pg = (uint32_t *)palloc(&kernel_pool);
-        uint32_t * new_pde = (uint32_t *)GET_PDE((uint32_t)new_pg);
-        memset(new_pde, 0, PG_SIZE);
+        //uint32_t * new_pde = (uint32_t *)GET_PDE((uint32_t)new_pg);
+        uint32_t * new_pte = (uint32_t *)GET_PTE((uint32_t)((uint32_t)virtual_address & 0xffc00000));
+
+        //memset(new_pde, 0, PG_SIZE);
         *pde = new_pg + PG_P_1 + PG_RW_W + PG_US_U;
+        memset(new_pte, 0, PG_SIZE);
         *pte = phy_address + PG_P_1 + PG_RW_W + PG_US_U;
     }
 }
@@ -122,9 +147,49 @@ void * malloc_page(enum pool_flags pf, uint32_t n){
 }
 
 void * get_kernel_page(uint32_t n){
+    lock_acquire(&kernel_pool.lock);
     void * vaddress = malloc_page(PF_KERNEL, n);
     if(vaddress != NULL){
         memset(vaddress, 0, n*PG_SIZE);
     }
+    lock_release(&kernel_pool.lock);
     return vaddress;
+}
+
+void * get_user_page(uint32_t n){
+    lock_acquire(&user_pool.lock);
+    void * vaddr = malloc_page(PF_USER, n);
+    memset(vaddr, 0, n * PG_SIZE);
+    lock_release(&user_pool.lock);
+    return vaddr;
+}
+
+void * get_a_page(enum pool_flags pf, uint32_t vaddr){
+    struct mem_pool * pool = pf==PF_KERNEL ? &kernel_pool : &user_pool;
+    lock_acquire(&pool->lock);
+    struct task_struct * current = current_thread();
+    uint32_t bit_idx = -1;
+    if(current->page != NULL && pf == PF_USER){
+        bit_idx = (vaddr - current->user_vaddress.vaddr_start)/PG_SIZE;
+        ASSERT(bit_idx > 0);
+        bitmap_set(&current->user_vaddress.vaddr_bitmap, bit_idx, 1);
+    }
+    else if(current->page == NULL && pf == PF_KERNEL){
+        bit_idx = (vaddr - kernel_vaddr.vaddr_start)/PG_SIZE;
+        ASSERT(bit_idx > 0);
+        bitmap_set(&kernel_vaddr.vaddr_bitmap, bit_idx, 1);
+    }
+    else{
+        PANIC("get_a_page: error.\n");
+    }
+    void * paddr = palloc(pool);
+    if(paddr == NULL) return NULL;
+    set_page_table(vaddr, paddr);
+    lock_release(&pool->lock);
+    return vaddr;
+}
+
+uint32_t addr_v2p(uint32_t vaddr){
+    uint32_t * pte = (uint32_t *)(0xffc00000 + ((vaddr & 0xfffff000) >> 10));
+    return (uint32_t)((vaddr & 0xfff) + (*pte & 0xfffff000));
 }

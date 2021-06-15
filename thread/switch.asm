@@ -8,14 +8,14 @@ switch_to:
     push edi
     push ebx
     push ebp
-    pushd
+    ;pushd
 
     mov eax, [esp + 20]
     mov [eax], esp
 
     mov eax, [esp + 24]
     mov esp, [eax]
-    popd
+    ;popd
     pop ebp
     pop ebx
     pop edi

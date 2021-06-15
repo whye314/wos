@@ -205,7 +205,7 @@ SECTION LOADER vstart=LOADER_BASE_ADDR
 
 
         ;init kernel
-        call kernel_init;0x4d5
+        call kernel_init
         mov esp, 0xc009f000
 
         ;print

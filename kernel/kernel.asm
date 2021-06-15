@@ -13,6 +13,8 @@ int_entry_table:
 
 %macro VECTOR 2
 section .text
+
+
 int%1entry:
 
     %2
@@ -36,21 +38,19 @@ int%1entry:
     push %1
     call [idt_table + %1*4]
     add esp, 4
+    jmp int_exit
 
-    popad
-    pop gs
-    pop fs
-    pop es
-    pop ds
 
-    add esp, 4
 
-    iretd
 
 section .data
     dd int%1entry
 
 %endmacro
+
+
+
+
 
     VECTOR 0x00, ZERO
     VECTOR 0x01, ZERO
@@ -106,7 +106,19 @@ section .data
 
 
 
+section .text
+global int_exit
+int_exit:
 
+    popad
+    pop gs
+    pop fs
+    pop es
+    pop ds
+
+    add esp, 4
+
+    iretd
 
 
 

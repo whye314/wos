@@ -1,7 +1,8 @@
+#include "thread.h"
 #include "tss.h"
 #include "global.h"
 #include "string.h"
-#include "thread.h"
+
 
 
 #define PG_SIZE 4096

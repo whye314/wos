@@ -43,6 +43,10 @@
 #define TSS_ATTR_LOW ((TSS_DESC_TYPE + TSS_DESC_S + TSS_DESC_DPL0 + TSS_DESC_P) >> 8)
 #define TSS_ATTR_HIGH ((TSS_DESC_AVL + TSS_DESC_D + TSS_DESC_L + TSS_DESC_G_4K) >> 16)
 
+#define SELECTOR_U_CODE ((6 << 3) + TI_GDT + RPL3)
+#define SELECTOR_U_DATA ((7 << 3) + TI_GDT + RPL3)
+#define SELECTOR_U_STACK ((8 << 3) + TI_GDT + RPL3)
+
 
 //GDT
 #define GDT_DESC_D_32 (1 << 22)
@@ -69,6 +73,18 @@
 #define GDT_ATTR_HIGH_STACK ((GDT_DESC_AVL + GDT_DESC_D_32 + GDT_DESC_L + GDT_DESC_G_B) >> 16)
 
 #define TSS_SELECTOR (0x5 << 3) + TI_GDT + RPL0
+
+#define EFLAGS_MBS (1 << 1)
+#define EFLAGS_IF_1 (1 << 9)
+#define EFLAGS_IF_0 0
+#define EFLAGS_IOPL_3 (3 << 12)
+#define EFLAGS_IOPL_0 0
+#define DIV_ROUND_UP(X, STEP) ((X + STEP - 1)/STEP)
+
+#define PG_SIZE 4096
+
+
+
 
 struct desc{
     uint16_t limit_low;
